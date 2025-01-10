@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using NUnit.Framework;
 
 namespace _2023_GC_A2_Partiel_POO.Level_2
 {
@@ -36,6 +37,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
             _baseDefense = baseDefense;
             _baseSpeed = baseSpeed;
             _baseType = baseType;
+            CurrentHealth = baseHealth;
         }
         /// <summary>
         /// HP actuel du personnage
@@ -106,6 +108,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         {
             if(attacker.CurrentStatus!=null && !attacker.CurrentStatus.CanAttack)
             {
+                attacker.CurrentStatus?.EndTurn();
                 return;
             }
             if(s.Status!=StatusPotential.HEAL)
@@ -133,13 +136,21 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
                     attacker.CurrentStatus=null;
                 }
             }
+            if(CurrentHealth<=0)
+            {
+                CurrentHealth=0;
+            }
 
         }
         ///  Cette méthode est adapter au test Unitaire
         public void ReceiveAttack(Skill s)
         {
-            CurrentHealth -= (int)(s.Power * TypeResolver.GetFactor(s.Type,BaseType)) - Defense;
+            CurrentHealth -= (int)(s.Power * TypeResolver.GetFactor(s.Type,BaseType))- Defense;
             CurrentStatus = StatusEffect.GetNewStatusEffect(s.Status);
+            if(CurrentHealth<=0)
+            {
+                CurrentHealth=0;
+            }
         }
         /// <summary>
         /// Equipe un objet au personnage

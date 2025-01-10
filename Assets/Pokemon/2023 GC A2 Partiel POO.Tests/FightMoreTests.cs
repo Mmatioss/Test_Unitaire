@@ -1,4 +1,6 @@
-﻿
+﻿using _2023_GC_A2_Partiel_POO.Level_2;
+using NUnit.Framework;
+using System;
 namespace _2023_GC_A2_Partiel_POO.Tests.Level_2
 {
     public class FightMoreTests
@@ -24,5 +26,62 @@ namespace _2023_GC_A2_Partiel_POO.Tests.Level_2
             // des TU précédentes ne matchent plus, tu as le droit de réadapter les valeurs
             // de ces anciens TU pour ta nouvelle situation.
         
+        [Test]
+        public void TestHeal()
+        {
+            Character pikachu = new Character(200, 20, 30, 20, TYPE.NORMAL);
+            Character salameche = new Character(200, 20, 20, 10, TYPE.NORMAL);
+            Fight f = new Fight(pikachu, salameche);
+            Punch p = new Punch();
+            Heal h = new Heal();
+
+            f.ExecuteTurn(p, h); // salameche prend - 70 et regagne 50 = 180, pikachu reste à 200
+
+            Assert.That(pikachu.CurrentHealth, Is.EqualTo(200));
+            Assert.That(salameche.CurrentHealth, Is.EqualTo(180)); 
+        }
+
+        [Test]
+        public void TestNoOverHeal()
+        {
+            Character pikachu = new Character(200, 20, 30, 20, TYPE.NORMAL);
+            Character salameche = new Character(200, 20, 20, 10, TYPE.NORMAL);
+            Fight f = new Fight(pikachu, salameche);
+            Heal h = new Heal();
+
+            f.ExecuteTurn(h, h); // 200 + 50 = 250, 200 + 50 = 250 mais max = 200
+
+            Assert.That(pikachu.CurrentHealth, Is.EqualTo(200));
+            Assert.That(salameche.CurrentHealth, Is.EqualTo(200)); 
+        }
+
+        [Test]
+        public void TestBurn()
+        {
+            Character pikachu = new Character(200, 20, 30, 20, TYPE.NORMAL);
+            Character salameche = new Character(200, 20, 20, 30, TYPE.NORMAL);
+            Fight f = new Fight(salameche, pikachu);
+            Punch p = new Punch();
+            FireBall fi = new FireBall();
+
+            f.ExecuteTurn(fi, p); // pikachu prend - 30 et brule - 10 = 160, salameche prend - 70 = 130
+
+            Assert.That(salameche.CurrentHealth, Is.EqualTo(130)); 
+            Assert.That(pikachu.CurrentHealth, Is.EqualTo(160));
+        }
+
+        [Test]
+        public void TestSleep()
+        {
+            Character pikachu = new Character(200, 20, 30, 20, TYPE.NORMAL);
+            Character salameche = new Character(200, 20, 20, 30, TYPE.NORMAL);
+            Fight f = new Fight(salameche, pikachu);
+            Punch p = new Punch();
+            MagicalGrass m = new MagicalGrass();
+
+            f.ExecuteTurn(m, p); // salameche prend 0 car pikachu dort
+
+            Assert.That(salameche.CurrentHealth, Is.EqualTo(200)); 
+        }
     }
 }

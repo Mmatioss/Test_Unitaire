@@ -7,6 +7,10 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
     {
         public Fight(Character character1, Character character2)
         {
+            if (character1 == null || character2 == null)
+            {
+                throw new ArgumentNullException("Les deux personnages doivent être non null");
+            }
             Character1 = character1;
             Character2 = character2;
         }

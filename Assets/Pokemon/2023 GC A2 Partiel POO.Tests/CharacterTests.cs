@@ -153,8 +153,9 @@ namespace _2023_GC_A2_Partiel_POO.Tests.Level_2
         [Test]
         public void FightWithOneTurn()
         {
-            Character pikachu = new Character(100, 50, 30, 20, TYPE.NORMAL);
-            Character bulbizarre = new Character(90, 60, 10, 200, TYPE.NORMAL);
+            // obliger de changer les hp car fight ajoute en plus des dégats de l'ataque, la puissance du pokémon attaquant
+            Character pikachu = new Character(150, 50, 30, 20, TYPE.NORMAL);
+            Character bulbizarre = new Character(150, 60, 10, 200, TYPE.NORMAL);
             Fight f = new Fight(pikachu, bulbizarre);
             Punch p = new Punch();
 
