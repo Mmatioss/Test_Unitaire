@@ -46,4 +46,12 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
     {
         public MagicalGrass() : base(TYPE.GRASS, 70, StatusPotential.SLEEP) { }
     }
+
+    /// <summary>
+    /// Heal rend 50HP
+    /// </summary>
+    public class Heal : Skill
+    {
+        public Heal() : base(TYPE.GRASS, 50, StatusPotential.HEAL) { }
+    }
 }

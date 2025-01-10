@@ -6,7 +6,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
     /// <summary>
     /// Enum des status de chaque attaque (voir plus bas)
     /// </summary>
-    public enum StatusPotential { NONE, SLEEP, BURN, CRAZY }
+    public enum StatusPotential { NONE, SLEEP, BURN, CRAZY, HEAL }
     
     public class StatusEffect
     {
@@ -21,6 +21,8 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
             {
                 case StatusPotential.SLEEP:
                     return new SleepStatus();
+                case StatusPotential.HEAL:
+                    return new HealStatus();
                 case StatusPotential.BURN:
                     return new BurnStatus();
                 case StatusPotential.CRAZY:
@@ -98,6 +100,16 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
     public class CrazyStatus : StatusEffect
     {
         public CrazyStatus() : base(1, 0, false, 0.3f)
+        {
+        }
+    }
+
+    /// <summary>
+    /// se heal
+    /// </summary>
+        public class HealStatus : StatusEffect
+    {
+        public HealStatus() : base(1, 50, false, 0f)
         {
         }
     }

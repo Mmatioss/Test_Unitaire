@@ -108,7 +108,19 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
             {
                 return;
             }
-            CurrentHealth -= (int)(attacker.Attack+s.Power * TypeResolver.GetFactor(s.Type,BaseType)) - Defense;
+            if(s.Status!=StatusPotential.HEAL)
+            {
+                CurrentStatus = StatusEffect.GetNewStatusEffect(s.Status);
+                CurrentHealth -= (int)(attacker.Attack+s.Power * TypeResolver.GetFactor(s.Type,BaseType)) - Defense;
+            }
+            else
+            {
+                attacker.CurrentHealth += s.Power;
+                if(attacker.CurrentHealth>attacker.MaxHealth)
+                {
+                    attacker.CurrentHealth=attacker.MaxHealth;
+                }
+            }
             if(attacker.CurrentStatus!=null)
             {
                 if(attacker.CurrentStatus.DamageOnAttack>0)
@@ -121,7 +133,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
                     attacker.CurrentStatus=null;
                 }
             }
-            CurrentStatus = StatusEffect.GetNewStatusEffect(s.Status);
+
         }
         ///  Cette méthode est adapter au test Unitaire
         public void ReceiveAttack(Skill s)
