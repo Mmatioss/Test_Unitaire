@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace _2023_GC_A2_Partiel_POO.Level_2
 {
@@ -48,7 +49,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         {
             get
             {
-                throw new NotImplementedException();
+                return _baseHealth + (CurrentEquipment == null ? 0 : CurrentEquipment.BonusHealth);
             }
         }
         /// <summary>
@@ -58,7 +59,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         {
             get
             {
-                throw new NotImplementedException();
+                return _baseAttack + (CurrentEquipment == null ? 0 : CurrentEquipment.BonusAttack);
             }
         }
         /// <summary>
@@ -68,7 +69,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         {
             get
             {
-                throw new NotImplementedException();
+                return _baseDefense + (CurrentEquipment == null ? 0 : CurrentEquipment.BonusDefense);
             }
         }
         /// <summary>
@@ -78,7 +79,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         {
             get
             {
-                throw new NotImplementedException();
+                return _baseSpeed + (CurrentEquipment == null ? 0 : CurrentEquipment.BonusSpeed);
             }
         }
         /// <summary>
@@ -90,7 +91,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         /// </summary>
         public StatusEffect CurrentStatus { get; private set; }
 
-        public bool IsAlive => throw new NotImplementedException();
+        public bool IsAlive => CurrentHealth > 0;
 
 
         /// <summary>
@@ -99,10 +100,34 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         /// Vous pouvez adapter au besoin
         /// </summary>
         /// <param name="s">skill attaquant</param>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// Cette méthode prend en compte l'attake du pokémon adverse et adapter au script Fight.cs
+        public void ReceiveAttack(Skill s, Character attacker)
+        {
+            if(attacker.CurrentStatus!=null && !attacker.CurrentStatus.CanAttack)
+            {
+                return;
+            }
+            CurrentHealth -= (int)(attacker.Attack+s.Power * TypeResolver.GetFactor(s.Type,BaseType)) - Defense;
+            if(attacker.CurrentStatus!=null)
+            {
+                if(attacker.CurrentStatus.DamageOnAttack>0)
+                {
+                attacker.CurrentHealth -= (int)(attacker.Attack * attacker.CurrentStatus.DamageOnAttack);
+                }
+                attacker.CurrentStatus?.EndTurn();
+                if(attacker.CurrentStatus.RemainingTurn==0)
+                {
+                    attacker.CurrentStatus=null;
+                }
+            }
+            CurrentStatus = StatusEffect.GetNewStatusEffect(s.Status);
+        }
+        ///  Cette méthode est adapter au test Unitaire
         public void ReceiveAttack(Skill s)
         {
-            throw new NotImplementedException();
+            CurrentHealth -= (int)(s.Power * TypeResolver.GetFactor(s.Type,BaseType)) - Defense;
+            CurrentStatus = StatusEffect.GetNewStatusEffect(s.Status);
         }
         /// <summary>
         /// Equipe un objet au personnage
@@ -111,14 +136,22 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         /// <exception cref="ArgumentNullException">Si equipement est null</exception>
         public void Equip(Equipment newEquipment)
         {
-            throw new NotImplementedException();
+            if (newEquipment == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else if (CurrentEquipment != null)
+            {
+                throw new InvalidOperationException("Character already equipped");
+            }
+            CurrentEquipment = newEquipment;
         }
         /// <summary>
         /// Desequipe l'objet en cours au personnage
         /// </summary>
         public void Unequip()
         {
-            throw new NotImplementedException();
+            CurrentEquipment = null;
         }
 
     }
